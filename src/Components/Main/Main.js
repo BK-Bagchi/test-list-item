@@ -12,6 +12,7 @@ import { red } from '@material-ui/core/colors';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ShareIcon from '@material-ui/icons/Share';
 import NavBar from './NavBar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,16 +33,25 @@ const useStyles = makeStyles((theme) => ({
     avatar: {
         backgroundColor: red[500],
     },
+    root2: {
+        margin: '25% auto',
+        display: 'flex',
+        '& > * + *': {
+            marginLeft: theme.spacing(2),
+        },
+    }
 }));
 
 const Main = () => {
     const classes = useStyles();
 
     const [postData, setPostData] = useState([])
+    const [loading, setLoading] = useState(true)
     fetch('https://jsonplaceholder.typicode.com/posts')
         .then(res => res.json())
         .then(data => {
             setPostData(data.filter(item => item.id <= 9))
+            setLoading(false)
         })
 
     return (
@@ -49,36 +59,45 @@ const Main = () => {
             <NavBar />
             <section className="posts d-flex justify-content-between row w-100">
                 {
-                    postData.map((post, i) => {
-                        const { id, body, title } = post
-                        return (
-                            <div key={id} className="col-md-4 my-4 d-flex justify-content-center">
-                                <Card className={classes.root}>
-                                    <CardHeader
-                                        avatar={
-                                            <Avatar aria-label="recipe" className={classes.avatar}>{title[0].toUpperCase()}</Avatar>
-                                        }
-                                        title={title}
-                                        subheader={new Date().toDateString()}
-                                    />
-                                    <CardContent>
-                                        <Typography variant="body2" color="textSecondary" component="p">{body}</Typography>
-                                    </CardContent>
-                                    <CardActions disableSpacing>
-                                        <IconButton aria-label="add to favorites">
-                                            <ThumbUpAltIcon />
-                                        </IconButton>
-                                        <IconButton className="mx-auto">
-                                            <small>Comments</small>
-                                        </IconButton>
-                                        <IconButton aria-label="add to favorites">
-                                            <ShareIcon />
-                                        </IconButton>
-                                    </CardActions>
-                                </Card>
-                            </div>
-                        )
-                    })
+                    loading ?
+                        <div className={classes.root2}>
+                            <CircularProgress style={{ color: 'white' }} />
+                        </div>
+                        :
+                        <>
+                            {
+                                postData.map((post, i) => {
+                                    const { id, body, title } = post
+                                    return (
+                                        <div key={id} className="col-md-4 my-4 d-flex justify-content-center">
+                                            <Card className={classes.root}>
+                                                <CardHeader
+                                                    avatar={
+                                                        <Avatar aria-label="recipe" className={classes.avatar}>{title[0].toUpperCase()}</Avatar>
+                                                    }
+                                                    title={title}
+                                                    subheader={new Date().toDateString()}
+                                                />
+                                                <CardContent>
+                                                    <Typography variant="body2" color="textSecondary" component="p">{body}</Typography>
+                                                </CardContent>
+                                                <CardActions disableSpacing>
+                                                    <IconButton aria-label="add to favorites">
+                                                        <ThumbUpAltIcon />
+                                                    </IconButton>
+                                                    <IconButton className="mx-auto">
+                                                        <small>Comments</small>
+                                                    </IconButton>
+                                                    <IconButton aria-label="add to favorites">
+                                                        <ShareIcon />
+                                                    </IconButton>
+                                                </CardActions>
+                                            </Card>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </>
                 }
             </section>
             <div className="background"></div>

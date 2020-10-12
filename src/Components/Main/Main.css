@@ -1,0 +1,11 @@
+.background{
+    position: fixed !important;
+    z-index: -11;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../../background.jpg');
+    background-attachment: fixed;
+    background-position: center center;
+} 
